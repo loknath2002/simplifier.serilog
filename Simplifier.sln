@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplifier.Serilog", "Simplifier.Serilog\Simplifier.Serilog.csproj", "{1C46D801-59A2-475E-8351-BD8EA9D3E4FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Simplifier.Serilog.Tests", "Simplifier.Serilog.Tests\Simplifier.Serilog.Tests.csproj", "{E6F2C868-2E87-493D-8C27-CE58FCE41C20}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1C46D801-59A2-475E-8351-BD8EA9D3E4FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C46D801-59A2-475E-8351-BD8EA9D3E4FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C46D801-59A2-475E-8351-BD8EA9D3E4FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C46D801-59A2-475E-8351-BD8EA9D3E4FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6F2C868-2E87-493D-8C27-CE58FCE41C20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6F2C868-2E87-493D-8C27-CE58FCE41C20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6F2C868-2E87-493D-8C27-CE58FCE41C20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6F2C868-2E87-493D-8C27-CE58FCE41C20}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

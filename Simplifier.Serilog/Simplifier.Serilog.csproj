@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;netstandard2.0;net8.0;net9.0;netstandard2.1;net472;net48</TargetFrameworks>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Title>Simplifier for Serilog</Title>
+        <Authors>Loknath</Authors>
+        <Description>Provides simple way to get Serilog Up and running with additional extensions to Serilog API enhancing logging experience.</Description>
+        <Copyright>Quantum Technology</Copyright>
+        <PackageProjectUrl>https://github.com/loknath2002/simplifier.serilog</PackageProjectUrl>
+        <PackageLicense>https://mit-license.org/</PackageLicense>
+        <RepositoryUrl>https://github.com/loknath2002/simplifier.serilog</RepositoryUrl>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+        <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    </PropertyGroup>
+    <ItemGroup>
+        <None Include="../README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Serilog" Version="4.3.0" />
+      <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />
+      <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
+      <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+      <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
+    </ItemGroup>
+
+</Project>
