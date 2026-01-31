@@ -98,3 +98,15 @@ By default the log file will produce the following columns
 The library has few preset templates which are present in ```LoggingConfiguration``` as static members.
 
 However library provides allows the consumers to change multiple settings as per the need and this is achieved by invoking ```LoggingSetup.Create(new LoggingConfiguration() { <Set the Properties as required> });```, **ensure that this call is made at the startup of the application before any logs are written.**
+
+## Changelog
+### 1.0.2
+1. Added documentation to the nuget package.
+2. Changed Default Log Format to provide 60 Characters for Callsite.
+
+### 1.0.1
+Changed LogScope to class to improve compatibility.
+
+### 1.0.0
+
+Initial release

@@ -13,7 +13,7 @@ namespace Simplifier.Serilog
     {
         internal const string CallSiteConst = "CallSite";
         internal const string ElapsedConst = "Elapsed";
-        internal const string DefaultLogFormat = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3} {ThreadId:D2} {Elapsed,10} {CallSite,75}() {Message}{NewLine}{Exception}";
+        internal const string DefaultLogFormat = "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3} {ThreadId:D2} {Elapsed,10} {CallSite,60}() {Message}{NewLine}{Exception}";
         internal const string DefaultLogFileName = "MyApplication_.slog";
 
         private static long myThreadSafeBool;

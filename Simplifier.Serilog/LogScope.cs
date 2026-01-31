@@ -10,9 +10,7 @@ namespace Simplifier.Serilog
     /// <summary>
     /// Class which encloses a scope which needs to be logged.
     /// </summary>
-#pragma warning disable CA1815
-    public readonly struct LogScope : IDisposable
-#pragma warning restore CA1815
+    public class LogScope : IDisposable
     {
         private readonly ILogger myLogger;
         private readonly LoggerDetail myDetail;

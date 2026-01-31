@@ -9,7 +9,7 @@ namespace Simplifier.Serilog
     public class LoggingConfiguration
     {
         /// <summary>
-        /// Gets or sets the log format. Default : "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3} {ThreadId:D2} {Elapsed,10} {CallSite,75}() {Message}{NewLine}{Exception}";
+        /// Gets or sets the log format. Default : "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {Level:u3} {ThreadId:D2} {Elapsed,10} {CallSite,60}() {Message}{NewLine}{Exception}";
         /// </summary>
         public string LogFormat { get; set; } = LoggingSetup.DefaultLogFormat;
         
