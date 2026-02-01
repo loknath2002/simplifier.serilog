@@ -55,6 +55,8 @@ public class LoggingTests
             aScope.WarningOverTime(TimeSpan.FromMilliseconds(200), () => "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_War_API", () => [9]);
             Thread.Sleep(100);
             aScope.WarningOverTime(TimeSpan.FromMilliseconds(200), () => "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_War_API", () => [10]);
+            aScope.Warning(new Exception(), "TraceMarker11Verify_All_Parts_Of_Logs_Are_Present_War_API");
+            aScope.Warning(new Exception(), "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_War_API", 12);
         }
 
         string aFuncName = "Simplifier.Serilog.Tests.LoggingTests.Verify_All_Parts_Of_Logs_Are_Present_War_API()";
@@ -65,6 +67,8 @@ public class LoggingTests
         AssertLinePresent(aLines, "TraceMarker6Verify_All_Parts_Of_Logs_Are_Present_War_API", "WRN", aFuncName);
         AssertLinePresent(aLines, "TraceMarker8Verify_All_Parts_Of_Logs_Are_Present_War_API", "WRN", aFuncName);
         AssertLinePresent(aLines, "TraceMarker10Verify_All_Parts_Of_Logs_Are_Present_War_API", "WRN", aFuncName);
+        AssertLinePresent(aLines, "TraceMarker11Verify_All_Parts_Of_Logs_Are_Present_War_API", "WRN", aFuncName);
+        AssertLinePresent(aLines, "TraceMarker12Verify_All_Parts_Of_Logs_Are_Present_War_API", "WRN", aFuncName);
         AssertLineAbsent(aLines, "TraceMarker2Verify_All_Parts_Of_Logs_Are_Present_War_API");
         AssertLineAbsent(aLines, "TraceMarker4Verify_All_Parts_Of_Logs_Are_Present_War_API");
         AssertLineAbsent(aLines, "TraceMarker7Verify_All_Parts_Of_Logs_Are_Present_War_API");
@@ -78,12 +82,16 @@ public class LoggingTests
         {
             aScope.Fatal("TraceMarker1Verify_All_Parts_Of_Logs_Are_Present_Ftl_API");
             aScope.Fatal("TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Ftl_API", 6);
+            aScope.Fatal(new Exception(), "TraceMarker7Verify_All_Parts_Of_Logs_Are_Present_Ftl_API");
+            aScope.Fatal(new Exception(), "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Ftl_API", 8);
         }
 
         string aFuncName = "Simplifier.Serilog.Tests.LoggingTests.Verify_All_Parts_Of_Logs_Are_Present_Ftl_API()";
         string[] aLines = ReadLogFile();
         AssertLinePresent(aLines, "TraceMarker1Verify_All_Parts_Of_Logs_Are_Present_Ftl_API", "FTL", aFuncName);
         AssertLinePresent(aLines, "TraceMarker6Verify_All_Parts_Of_Logs_Are_Present_Ftl_API", "FTL", aFuncName);
+        AssertLinePresent(aLines, "TraceMarker7Verify_All_Parts_Of_Logs_Are_Present_Ftl_API", "FTL", aFuncName);
+        AssertLinePresent(aLines, "TraceMarker8Verify_All_Parts_Of_Logs_Are_Present_Ftl_API", "FTL", aFuncName);
     }
 
     [Test]
@@ -103,6 +111,8 @@ public class LoggingTests
             aScope.DebugOverTime(TimeSpan.FromMilliseconds(200), () => "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Dbg_API", () => [9]);
             Thread.Sleep(100);
             aScope.DebugOverTime(TimeSpan.FromMilliseconds(200), () => "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Dbg_API", () => [10]);
+            aScope.Debug(new Exception(), "TraceMarker11Verify_All_Parts_Of_Logs_Are_Present_Dbg_API");
+            aScope.Debug(new Exception(), "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Dbg_API", 12);
         }
 
         string aFuncName = "Simplifier.Serilog.Tests.LoggingTests.Verify_All_Parts_Of_Logs_Are_Present_Dbg_API()";
@@ -113,6 +123,8 @@ public class LoggingTests
         AssertLinePresent(aLines, "TraceMarker6Verify_All_Parts_Of_Logs_Are_Present_Dbg_API", "DBG", aFuncName);
         AssertLinePresent(aLines, "TraceMarker8Verify_All_Parts_Of_Logs_Are_Present_Dbg_API", "DBG", aFuncName);
         AssertLinePresent(aLines, "TraceMarker10Verify_All_Parts_Of_Logs_Are_Present_Dbg_API", "DBG", aFuncName);
+        AssertLinePresent(aLines, "TraceMarker11Verify_All_Parts_Of_Logs_Are_Present_Dbg_API", "DBG", aFuncName);
+        AssertLinePresent(aLines, "TraceMarker12Verify_All_Parts_Of_Logs_Are_Present_Dbg_API", "DBG", aFuncName);
         AssertLineAbsent(aLines, "TraceMarker2Verify_All_Parts_Of_Logs_Are_Present_Dbg_API");
         AssertLineAbsent(aLines, "TraceMarker4Verify_All_Parts_Of_Logs_Are_Present_Dbg_API");
         AssertLineAbsent(aLines, "TraceMarker7Verify_All_Parts_Of_Logs_Are_Present_Dbg_API");
@@ -136,6 +148,8 @@ public class LoggingTests
             aScope.VerboseOverTime(TimeSpan.FromMilliseconds(200), () => "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Ver_API", () => [9]);
             Thread.Sleep(100);
             aScope.VerboseOverTime(TimeSpan.FromMilliseconds(200), () => "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Ver_API", () => [10]);
+            aScope.Verbose(new Exception(), "TraceMarker11Verify_All_Parts_Of_Logs_Are_Present_Ver_API");
+            aScope.Verbose(new Exception(), "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Ver_API", 12);
         }
 
         string aFuncName = "Simplifier.Serilog.Tests.LoggingTests.Verify_All_Parts_Of_Logs_Are_Present_Ver_API()";
@@ -146,6 +160,8 @@ public class LoggingTests
         AssertLinePresent(aLines, "TraceMarker6Verify_All_Parts_Of_Logs_Are_Present_Ver_API", "VRB", aFuncName);
         AssertLinePresent(aLines, "TraceMarker8Verify_All_Parts_Of_Logs_Are_Present_Ver_API", "VRB", aFuncName);
         AssertLinePresent(aLines, "TraceMarker10Verify_All_Parts_Of_Logs_Are_Present_Ver_API", "VRB", aFuncName);
+        AssertLinePresent(aLines, "TraceMarker11Verify_All_Parts_Of_Logs_Are_Present_Ver_API", "VRB", aFuncName);
+        AssertLinePresent(aLines, "TraceMarker12Verify_All_Parts_Of_Logs_Are_Present_Ver_API", "VRB", aFuncName);
         AssertLineAbsent(aLines, "TraceMarker2Verify_All_Parts_Of_Logs_Are_Present_Ver_API");
         AssertLineAbsent(aLines, "TraceMarker4Verify_All_Parts_Of_Logs_Are_Present_Ver_API");
         AssertLineAbsent(aLines, "TraceMarker7Verify_All_Parts_Of_Logs_Are_Present_Ver_API");
@@ -159,12 +175,16 @@ public class LoggingTests
         {
             aScope.Error("TraceMarker1Verify_All_Parts_Of_Logs_Are_Present_Err_API");
             aScope.Error("TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Err_API", 6);
+            aScope.Error(new Exception(), "TraceMarker7Verify_All_Parts_Of_Logs_Are_Present_Err_API", 7);
+            aScope.Error(new Exception(), "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Err_API", 8);
         }
 
         string aFuncName = "Simplifier.Serilog.Tests.LoggingTests.Verify_All_Parts_Of_Logs_Are_Present_Err_API()";
         string[] aLines = ReadLogFile();
         AssertLinePresent(aLines, "TraceMarker1Verify_All_Parts_Of_Logs_Are_Present_Err_API", "ERR", aFuncName);
         AssertLinePresent(aLines, "TraceMarker6Verify_All_Parts_Of_Logs_Are_Present_Err_API", "ERR", aFuncName);
+        AssertLinePresent(aLines, "TraceMarker7Verify_All_Parts_Of_Logs_Are_Present_Err_API", "ERR", aFuncName);
+        AssertLinePresent(aLines, "TraceMarker8Verify_All_Parts_Of_Logs_Are_Present_Err_API", "ERR", aFuncName);
     }
 
     [Test]
@@ -184,6 +204,8 @@ public class LoggingTests
             aScope.InfoWhenOverTime(TimeSpan.FromMilliseconds(200), () => "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Inf_API", () => [9]);
             Thread.Sleep(100);
             aScope.InfoWhenOverTime(TimeSpan.FromMilliseconds(200), () => "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Inf_API", () => [10]);
+            aScope.Info(new Exception(), "TraceMarker11Verify_All_Parts_Of_Logs_Are_Present_Inf_API");
+            aScope.Info(new Exception(), "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Inf_API", 12);
         }
 
         string aFuncName = "Simplifier.Serilog.Tests.LoggingTests.Verify_All_Parts_Of_Logs_Are_Present_Inf_API()";
@@ -194,6 +216,8 @@ public class LoggingTests
         AssertLinePresent(aLines, "TraceMarker6Verify_All_Parts_Of_Logs_Are_Present_Inf_API", "INF", aFuncName);
         AssertLinePresent(aLines, "TraceMarker8Verify_All_Parts_Of_Logs_Are_Present_Inf_API", "INF", aFuncName);
         AssertLinePresent(aLines, "TraceMarker10Verify_All_Parts_Of_Logs_Are_Present_Inf_API", "INF", aFuncName);
+        AssertLinePresent(aLines, "TraceMarker11Verify_All_Parts_Of_Logs_Are_Present_Inf_API", "INF", aFuncName);
+        AssertLinePresent(aLines, "TraceMarker12Verify_All_Parts_Of_Logs_Are_Present_Inf_API", "INF", aFuncName);
         AssertLineAbsent(aLines, "TraceMarker2Verify_All_Parts_Of_Logs_Are_Present_Inf_API");
         AssertLineAbsent(aLines, "TraceMarker4Verify_All_Parts_Of_Logs_Are_Present_Inf_API");
         AssertLineAbsent(aLines, "TraceMarker7Verify_All_Parts_Of_Logs_Are_Present_Inf_API");
@@ -244,9 +268,10 @@ public class LoggingTests
         Assert.That(aParts[1], Does.Match(@"^\d{2}:\d{2}:\d{2}\.\d{3}$"));
         Assert.That(aParts[2], Is.EqualTo(theLevel));
         Assert.That(aParts[3], Does.Match(@"^\d+$"));
-        // Assert.That(aParts[4], Does.Match(
-        //     @"^(>10M|<1ms|\d+ms|\d+\.\d{2}S|\d+\.\dS|\d+\.\d{2}M|\d+\.\dM)$"
-        // ));
+        Assert.That(aParts[4], Does.Match(
+            @"^(>10M|<1ms|\d+ms|\d+\.\d+ms|\d+\.\d{2}S|\d+\.\dS|\d+\.\d{2}M|\d+\.\dM)$"
+        ));
+        
         Assert.That(aParts[5], Is.EqualTo(theFunctionName));
         Assert.That(string.Join(" ", aParts[6..]), Is.EqualTo(theMatchMarker));
     }

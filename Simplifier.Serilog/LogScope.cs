@@ -49,7 +49,46 @@ namespace Simplifier.Serilog
         public TimeSpan Elapsed => DateTime.UtcNow - myStartTime;
 
         #region Verbose
+        
+        /// <summary>
+        /// Writes verbose level log to serilog framework with exception detail.
+        /// </summary>
+        /// <param name="theException">the exception detail to log</param>
+        /// <param name="theMessageTemplate">Message template describing the log event.</param>
+        public void Verbose(Exception theException, string theMessageTemplate)
+        {
+            if (!myLogger.IsEnabled(LogEventLevel.Verbose))
+            {
+                return;
+            }
 
+            using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
+            using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
+            {
+                myLogger.Verbose(theException, theMessageTemplate);
+            }
+        }
+
+        /// <summary>
+        /// Writes verbose level log to serilog framework with exception detail.
+        /// </summary>
+        /// <param name="theException">the exception detail to log</param>
+        /// <param name="theMessageTemplate">Message template describing the log event.</param>
+        /// <param name="theFormatArgs">Positional Formatting arguments used for formatting the log event</param>
+        public void Verbose(Exception theException, string theMessageTemplate, params object[] theFormatArgs)
+        {
+            if (!myLogger.IsEnabled(LogEventLevel.Verbose))
+            {
+                return;
+            }
+
+            using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
+            using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
+            {
+                myLogger.Verbose(theException, theMessageTemplate, theFormatArgs);
+            }
+        }
+        
         /// <summary>
         /// Writes verbose level log to serilog framework only when Elapsed has crossed the deadline
         /// </summary>
@@ -72,9 +111,9 @@ namespace Simplifier.Serilog
         {
             if (theCondition == null)
             {
-                return;    
+                return;
             }
-            
+
             if (theCondition())
             {
                 Verbose(theMessageTemplate);
@@ -105,7 +144,7 @@ namespace Simplifier.Serilog
         {
             if (theCondition == null || theMessageTemplate == null || theFormatArgs == null)
             {
-                return;    
+                return;
             }
 
             if (theCondition())
@@ -126,7 +165,7 @@ namespace Simplifier.Serilog
             {
                 return;
             }
-            
+
             if (this.Elapsed > theDeadline)
             {
                 Verbose(theMessageTemplate(), theFormatArgs());
@@ -157,6 +196,45 @@ namespace Simplifier.Serilog
         #region Debug
 
         /// <summary>
+        /// Writes debug level log to serilog framework with exception detail.
+        /// </summary>
+        /// <param name="theException">the exception detail to log</param>
+        /// <param name="theMessageTemplate">Message template describing the log event.</param>
+        public void Debug(Exception theException, string theMessageTemplate)
+        {
+            if (!myLogger.IsEnabled(LogEventLevel.Debug))
+            {
+                return;
+            }
+
+            using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
+            using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
+            {
+                myLogger.Debug(theException, theMessageTemplate);
+            }
+        }
+
+        /// <summary>
+        /// Writes debug level log to serilog framework with exception detail.
+        /// </summary>
+        /// <param name="theException">the exception detail to log</param>
+        /// <param name="theMessageTemplate">Message template describing the log event.</param>
+        /// <param name="theFormatArgs">Positional Formatting arguments used for formatting the log event</param>
+        public void Debug(Exception theException, string theMessageTemplate, params object[] theFormatArgs)
+        {
+            if (!myLogger.IsEnabled(LogEventLevel.Debug))
+            {
+                return;
+            }
+
+            using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
+            using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
+            {
+                myLogger.Debug(theException, theMessageTemplate, theFormatArgs);
+            }
+        }
+
+        /// <summary>
         /// Writes debug level log to serilog framework only when Elapsed has crossed the deadline
         /// </summary>
         /// <param name="theDeadline">the deadline time to check for</param>
@@ -178,7 +256,7 @@ namespace Simplifier.Serilog
         {
             if (theCondition == null)
             {
-                return;    
+                return;
             }
 
             if (theCondition())
@@ -216,7 +294,7 @@ namespace Simplifier.Serilog
         {
             if (theCondition == null || theMessageTemplate == null || theFormatArgs == null)
             {
-                return;    
+                return;
             }
 
             if (theCondition())
@@ -235,7 +313,7 @@ namespace Simplifier.Serilog
         {
             if (theMessageTemplate == null || theFormatArgs == null)
             {
-                return;    
+                return;
             }
 
             if (this.Elapsed > theDeadline)
@@ -267,7 +345,46 @@ namespace Simplifier.Serilog
         #endregion
 
         #region Information
+        
+        /// <summary>
+        /// Writes informational level log to serilog framework with exception detail.
+        /// </summary>
+        /// <param name="theException">the exception detail to log</param>
+        /// <param name="theMessageTemplate">Message template describing the log event.</param>
+        public void Info(Exception theException, string theMessageTemplate)
+        {
+            if (!myLogger.IsEnabled(LogEventLevel.Information))
+            {
+                return;
+            }
 
+            using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
+            using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
+            {
+                myLogger.Information(theException, theMessageTemplate);
+            }
+        }
+
+        /// <summary>
+        /// Writes informational level log to serilog framework with exception detail.
+        /// </summary>
+        /// <param name="theException">the exception detail to log</param>
+        /// <param name="theMessageTemplate">Message template describing the log event.</param>
+        /// <param name="theFormatArgs">Positional Formatting arguments used for formatting the log event</param>
+        public void Info(Exception theException, string theMessageTemplate, params object[] theFormatArgs)
+        {
+            if (!myLogger.IsEnabled(LogEventLevel.Information))
+            {
+                return;
+            }
+
+            using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
+            using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
+            {
+                myLogger.Information(theException, theMessageTemplate, theFormatArgs);
+            }
+        }
+        
         /// <summary>
         /// Writes informational level log to serilog framework only when Elapsed has crossed the deadline
         /// </summary>
@@ -290,10 +407,10 @@ namespace Simplifier.Serilog
         {
             if (theCondition == null)
             {
-                return;    
+                return;
             }
 
-            
+
             if (theCondition())
             {
                 Info(theMessageTemplate);
@@ -328,7 +445,7 @@ namespace Simplifier.Serilog
         {
             if (theCondition == null || theMessageTemplate == null || theFormatArgs == null)
             {
-                return;    
+                return;
             }
 
             if (theCondition())
@@ -347,7 +464,7 @@ namespace Simplifier.Serilog
         {
             if (theMessageTemplate == null || theFormatArgs == null)
             {
-                return;    
+                return;
             }
 
             if (this.Elapsed > theDeadline)
@@ -380,6 +497,45 @@ namespace Simplifier.Serilog
         #region Warning
 
         /// <summary>
+        /// Writes warning level log to serilog framework with exception detail.
+        /// </summary>
+        /// <param name="theException">the exception detail to log</param>
+        /// <param name="theMessageTemplate">Message template describing the log event.</param>
+        public void Warning(Exception theException, string theMessageTemplate)
+        {
+            if (!myLogger.IsEnabled(LogEventLevel.Warning))
+            {
+                return;
+            }
+
+            using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
+            using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
+            {
+                myLogger.Warning(theException, theMessageTemplate);
+            }
+        }
+
+        /// <summary>
+        /// Writes warning level log to serilog framework with exception detail.
+        /// </summary>
+        /// <param name="theException">the exception detail to log</param>
+        /// <param name="theMessageTemplate">Message template describing the log event.</param>
+        /// <param name="theFormatArgs">Positional Formatting arguments used for formatting the log event</param>
+        public void Warning(Exception theException, string theMessageTemplate, params object[] theFormatArgs)
+        {
+            if (!myLogger.IsEnabled(LogEventLevel.Warning))
+            {
+                return;
+            }
+
+            using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
+            using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
+            {
+                myLogger.Warning(theException, theMessageTemplate, theFormatArgs);
+            }
+        }
+
+        /// <summary>
         /// Writes warning level log to serilog framework only when Elapsed has crossed the deadline
         /// </summary>
         /// <param name="theDeadline">the deadline time to check for</param>
@@ -401,7 +557,7 @@ namespace Simplifier.Serilog
         {
             if (theCondition == null)
             {
-                return;    
+                return;
             }
 
             if (theCondition())
@@ -438,7 +594,7 @@ namespace Simplifier.Serilog
         {
             if (theCondition == null || theMessageTemplate == null || theFormatArgs == null)
             {
-                return;    
+                return;
             }
 
             if (theCondition())
@@ -458,7 +614,7 @@ namespace Simplifier.Serilog
         {
             if (theMessageTemplate == null || theFormatArgs == null)
             {
-                return;    
+                return;
             }
 
             if (this.Elapsed > theDeadline)
@@ -490,6 +646,46 @@ namespace Simplifier.Serilog
 
         #region Error
 
+        
+        /// <summary>
+        /// Writes error level log to serilog framework with exception detail
+        /// </summary>
+        /// <param name="theException">the exception detail to log</param>
+        /// <param name="theMessageTemplate">Message template describing the log event.</param>
+        public void Error(Exception theException, string theMessageTemplate)
+        {
+            if (!myLogger.IsEnabled(LogEventLevel.Error))
+            {
+                return;
+            }
+
+            using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
+            using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
+            {
+                myLogger.Fatal(theException, theMessageTemplate);
+            }
+        }
+
+        /// <summary>
+        /// Writes error level log to serilog framework with exception detail
+        /// </summary>
+        /// <param name="theException">the exception detail to log</param>
+        /// <param name="theMessageTemplate">Message template describing the log event.</param>
+        /// <param name="theFormatArgs">Positional Formatting arguments used for formatting the log event</param>
+        public void Error(Exception theException, string theMessageTemplate, params object[] theFormatArgs)
+        {
+            if (!myLogger.IsEnabled(LogEventLevel.Error))
+            {
+                return;
+            }
+
+            using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
+            using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
+            {
+                myLogger.Error(theException, theMessageTemplate, theFormatArgs);
+            }
+        }
+
         /// <summary>
         /// Writes error level log to serilog framework.
         /// </summary>
@@ -502,7 +698,6 @@ namespace Simplifier.Serilog
             }
 
             using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
-            using (LogContext.PushProperty("Method", myCallerName))
             using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
             {
                 myLogger.Error(theMessageTemplate);
@@ -522,7 +717,6 @@ namespace Simplifier.Serilog
             }
 
             using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
-            using (LogContext.PushProperty("Method", myCallerName))
             using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
             {
                 myLogger.Error(theMessageTemplate, theFormatArgs);
@@ -532,6 +726,45 @@ namespace Simplifier.Serilog
         #endregion
 
         #region Fatal
+
+        /// <summary>
+        /// Writes fatal level log to serilog framework with exception detail.
+        /// </summary>
+        /// <param name="theException">the exception detail to log</param>
+        /// <param name="theMessageTemplate">Message template describing the log event.</param>
+        public void Fatal(Exception theException, string theMessageTemplate)
+        {
+            if (!myLogger.IsEnabled(LogEventLevel.Fatal))
+            {
+                return;
+            }
+
+            using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
+            using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
+            {
+                myLogger.Fatal(theException, theMessageTemplate);
+            }
+        }
+
+        /// <summary>
+        /// Writes fatal level log to serilog framework with exception detail.
+        /// </summary>
+        /// <param name="theException">the exception detail to log</param>
+        /// <param name="theMessageTemplate">Message template describing the log event.</param>
+        /// <param name="theFormatArgs">Positional Formatting arguments used for formatting the log event</param>
+        public void Fatal(Exception theException, string theMessageTemplate, params object[] theFormatArgs)
+        {
+            if (!myLogger.IsEnabled(LogEventLevel.Fatal))
+            {
+                return;
+            }
+
+            using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
+            using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
+            {
+                myLogger.Fatal(theException, theMessageTemplate, theFormatArgs);
+            }
+        }
 
         /// <summary>
         /// Writes fatal level log to serilog framework.
@@ -545,7 +778,6 @@ namespace Simplifier.Serilog
             }
 
             using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
-            using (LogContext.PushProperty("Method", myCallerName))
             using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
             {
                 myLogger.Fatal(theMessageTemplate);
@@ -565,7 +797,6 @@ namespace Simplifier.Serilog
             }
 
             using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
-            using (LogContext.PushProperty("Method", myCallerName))
             using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
             {
                 myLogger.Fatal(theMessageTemplate, theFormatArgs);
