@@ -662,7 +662,7 @@ namespace Simplifier.Serilog
             using (LogContext.PushProperty(LoggingSetup.CallSiteConst, GetCallSight()))
             using (LogContext.PushProperty(LoggingSetup.ElapsedConst, GetElapsed(DateTime.UtcNow - myStartTime)))
             {
-                myLogger.Fatal(theException, theMessageTemplate);
+                myLogger.Error(theException, theMessageTemplate);
             }
         }
 

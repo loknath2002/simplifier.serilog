@@ -177,6 +177,7 @@ public class LoggingTests
             aScope.Error("TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Err_API", 6);
             aScope.Error(new Exception(), "TraceMarker7Verify_All_Parts_Of_Logs_Are_Present_Err_API", 7);
             aScope.Error(new Exception(), "TraceMarker{0}Verify_All_Parts_Of_Logs_Are_Present_Err_API", 8);
+            aScope.Error(new Exception(), "TraceMarker2Verify_All_Parts_Of_Logs_Are_Present_Err_API");
         }
 
         string aFuncName = "Simplifier.Serilog.Tests.LoggingTests.Verify_All_Parts_Of_Logs_Are_Present_Err_API()";
@@ -185,6 +186,7 @@ public class LoggingTests
         AssertLinePresent(aLines, "TraceMarker6Verify_All_Parts_Of_Logs_Are_Present_Err_API", "ERR", aFuncName);
         AssertLinePresent(aLines, "TraceMarker7Verify_All_Parts_Of_Logs_Are_Present_Err_API", "ERR", aFuncName);
         AssertLinePresent(aLines, "TraceMarker8Verify_All_Parts_Of_Logs_Are_Present_Err_API", "ERR", aFuncName);
+        AssertLinePresent(aLines, "TraceMarker2Verify_All_Parts_Of_Logs_Are_Present_Err_API", "ERR", aFuncName);
     }
 
     [Test]

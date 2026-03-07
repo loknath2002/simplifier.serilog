@@ -100,6 +100,11 @@ The library has few preset templates which are present in ```LoggingConfiguratio
 However, library provides allows the consumers to change multiple settings as per the need and this is achieved by invoking ```LoggingSetup.Create(new LoggingConfiguration() { <Set the Properties as required> });```, **ensure that this call is made at the startup of the application before any logs are written.**
 
 ## Changelog
+### 1.0.4
+
+1. Upgrade serilog version to 4.3.1
+2. Fixed bug where Error API was logging at Fatal Level
+
 ### 1.0.3
 
 Added Overloads for all the API's to accept exception object
