@@ -89,7 +89,7 @@ By default the log file will produce the following columns
 | 2             | Time           | Standard Local Time Column                           |
 | 3             | Level          | 3 Character, Serilog Trace Level.                    |
 | 4             | ThreadID       | ID Of the executing thread                           |
-| 5             | Executing Time | Time consumed prior to reaching the trace statement. |
+| 5             | Execution Time | Time consumed prior to reaching the trace statement. |
 | 6             | CallSite       | Namespace + Function Name of the logger              |
 | 7             | Log            | The full log as written by the application           |
 
