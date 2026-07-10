@@ -1,8 +1,16 @@
 ﻿using System;
 namespace Simplifier.Serilog
 {
-    public static class Guard
+    /// <summary>
+    /// Guard class for parameter validation.
+    /// </summary>
+    internal static class Guard
     {
+        /// <summary>
+        /// Guards against null objects.
+        /// </summary>
+        /// <param name="theObj">The object to check.</param>
+        /// <param name="theParamName">The parameter name.</param>
         internal static void AgainstNull(object theObj, string theParamName)
         {
             if (theObj == null)
@@ -11,6 +19,11 @@ namespace Simplifier.Serilog
             }
         }
 
+        /// <summary>
+        /// Guards against null or white space strings.
+        /// </summary>
+        /// <param name="theVariable">The string to check.</param>
+        /// <param name="theVarName">The variable name.</param>
         internal static void AgainstNullOrWhiteSpace(string theVariable, string theVarName)
         {
             if (string.IsNullOrWhiteSpace(theVariable))

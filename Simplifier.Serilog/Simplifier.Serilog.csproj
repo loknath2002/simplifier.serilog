@@ -16,17 +16,17 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <Version>1.0.4</Version>
+        <Version>1.0.5</Version>
         <PackageTags>serilog, logger, simplifier</PackageTags>
         <PackageLicenseUrl></PackageLicenseUrl>
-        <PackageReleaseNotes>1. Upgrade serilog version to 4.3.1
-2. Fixed bug where Error API was logging at Fatal Level</PackageReleaseNotes>
+        <PackageReleaseNotes>1. Upgrade serilog version to 4.4.0
+2. Sealed LogScope as it's not intended to be inherited.</PackageReleaseNotes>
     </PropertyGroup>
     <ItemGroup>
         <None Include="../README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="Serilog" Version="4.3.1" />
+      <PackageReference Include="Serilog" Version="4.4.0" />
       <PackageReference Include="Serilog.Enrichers.Process" Version="3.0.0" />
       <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
       <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />

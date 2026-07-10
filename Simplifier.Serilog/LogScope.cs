@@ -10,7 +10,7 @@ namespace Simplifier.Serilog
     /// <summary>
     /// Class which encloses a scope which needs to be logged.
     /// </summary>
-    public class LogScope : IDisposable
+    public sealed class LogScope : IDisposable
     {
         private readonly ILogger myLogger;
         private readonly LoggerDetail myDetail;
@@ -812,6 +812,8 @@ namespace Simplifier.Serilog
             {
                 this.Info($"[O] Exiting {myCallerName}");
             }
+
+            GC.SuppressFinalize(this);
         }
 
         #endregion
