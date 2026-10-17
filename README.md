@@ -1,16 +1,18 @@
 # Simplifier For Serilog
 
-Provides simple way to get Serilog Up and running with additional extensions to Serilog API enhancing logging experience.
+Provides a simple way to get Serilog Up and running with additional extensions and namespace-based log filtering with multi-file creation to Serilog API enhancing the logging experience.
 
 ## Enhancements
 
 You get all the features of Serilog + the following
 
-1. Enriches the logs with additional details, i.e **Namespace Name, Class name and Function name.**
-2. Enriches the logs enabling applications to **measure time** consumed by each methods at the instant of logging. (10ms in the example denotes that the function has spend 10ms until it reaches the log statement)
-3. Enriches the logs with In-Out Logs. This allows detailed tracing of each functions enter and exit traces.
-4. Provides various API's to conditionally write the log, reducing complexity in the calling code and log file size.
-5. Zero Setup required as the Logging configuration templates are shipped out of the box
+1. Adds namespace-based logging feature, the application now can change settings for each namespace independently. [See Here](#namespace-based-logging)
+2. Allows creation of multiple log files from the same application, each module in the application can have its own log file. [See Here](#multi-file-logging)
+3. Enriches the logs with additional details, i.e. **Namespace Name, Class name and Function name.**
+4. Enriches the logs enabling applications to **measure time** consumed by each method at the instant of logging. (10ms in the example denotes that the function has spend 10ms until it reaches the log statement)
+5. Enriches the logs with In-Out Logs. This allows detailed tracing of each function entry and exit trace.
+6. Provides various API's to conditionally write the log, reducing complexity in the calling code and log file size.
+7. Zero Setup required as the Logging configuration templates are shipped out of the box
 
 ## Quick Start
 
@@ -25,7 +27,7 @@ using (LogScope aScope = new LogScope(new LoggerDetail("DemoUnOptimizedLogger"))
 }
 ```
 
-However the above example can further be optimized to reuse LoggingDetail and infact one LogScope can be used to log multiple log statements at once. A more realistic example is shown below.
+However, the above example can further be optimized to reuse LoggingDetail, and in fact one LogScope can be used to log multiple log statements at once. A more realistic example is shown below.
 
 ```cs
 namespace Simplifier.Serilog.Sample
@@ -99,7 +101,88 @@ The library has few preset templates which are present in ```LoggingConfiguratio
 
 However, library provides allows the consumers to change multiple settings as per the need and this is achieved by invoking ```LoggingSetup.Create(new LoggingConfiguration() { <Set the Properties as required> });```, **ensure that this call is made at the startup of the application before any logs are written.**
 
+## Namespace Based Logging
+
+This feature allows the application to configure different log levels for different namespaces. To use this feature, we need to make use of `MultiInstanceLoggingSetup`
+
+```
+var aLoggerInstance = new MultiInstanceLoggingSetup(LoggingConfiguration.ProdConfig);
+aLoggerInstance.AddSubLogger("App.StorageModule", new SubLoggingConfiguration
+{
+    LogEventLevel = LogEventLevel.Information,
+});
+
+aLoggerInstance.AddSubLogger("App.BusinessModule", new SubLoggingConfiguration
+{
+    LogEventLevel = LogEventLevel.Error,
+});
+
+// Any LogDetail with namespace App.BusinessModule will be logged at Error Level
+// Any LogDetail with namespace App.StorageModule will be logged at Information Level
+using (var aScope = new LogScope(new LoggerDetail("App.StorageModule.SQLiteStorage"))),
+{
+    aScope.Info("Connected to SQLite Database"); // Will be logged
+    aScope.Verbose("Connection ID for transaction is 1234567890"); // Will NOT be logged
+}
+
+using (var aScope = new LogScope(new LoggerDetail("App.BusinessModule.DiscountRules"))),
+{
+    aScope.Info("A discount of 5% deduced"); // Will NOT be logged
+    aScope.Error("Discount application failed. The Customer has already used a coupon."); // Will be logged 
+}
+
+// Dynamically changing the log level for a namespace
+aLoggerInstance.ChangeLogLevel("App.BusinessModule", LogEventLevel.Info);
+using (var aScope = new LogScope(new LoggerDetail("App.BusinessModule.DiscountRules"))),
+{
+    aScope.Info("A discount of 5% deduced"); // Viola : Will be logged
+    aScope.Error("Discount application failed. The Customer has already used a coupon."); // Will be logged 
+}
+```
+### Performance Considerations
+
+Each time a new instance of LoggerDetail is created internally, a search is triggered. If there are 5000 subloggers this search can take upto 0.5ms. This maybe be small but something to keep an eye on. The recommendation is to create LoggerDetail once per class as a static readonly instance which negates this perfomance impact.
+
+## Multi-File Logging
+
+This feature allows the application to emit logs to multiple log files based on the instance names.
+
+```
+var aDefaultConfig = LoggingConfiguration.ProdConfig;
+var aInstanceForBusiness = new MultiInstanceLoggingSetup(aDefaultConfig); // Recommended : Default instance, if everything else fails your trace will be atleast logged here.
+
+aDefaultConfig.FileName = "MyApplication_Business_.log";
+var aInstanceForBusiness = new MultiInstanceLoggingSetup(aDefaultConfig, "Business"); // Note the second parameter
+
+aDefaultConfig.FileName = "MyApplication_Storage_.log"; // Omited other properties, at minimum we need to change the file name.
+var aInstanceForStorage = new MultiInstanceLoggingSetup(aDefaultConfig, "Storage"); // Note the second parameter
+
+// When creating a LoggerDetail we have to pass the instance name as well.
+var aLogDetailForStorage = new LoggerDetail("App.StorageModule.SQLiteStorage", "Storage");
+using (var aScope = new LogScope(aLogDetailForStorage)),
+{
+    // All of these will go to MyApplication_Storage_*.log file
+    aScope.Info("Connected to SQLite Database"); // Will be logged
+}
+
+var aLogDetailWithoutName = new LoggerDetail("App.BusinessModule.DiscountRules");
+using (var aScope = new LogScope(new LoggerDetail("App.BusinessModule.DiscountRules"))),
+{
+    // All of these will go to MyApplication_*.log file as the instance name is not provided
+    aScope.Info("User forgot to enter the instance name!"); 
+}
+```
+
 ## Changelog
+### 2.0.0
+
+1. Added multi-file logging feature
+2. Added a namespace-based logging level filters.
+
+### 1.0.5
+
+1. Upgrade serilog version to 4.4.0
+
 ### 1.0.4
 
 1. Upgrade serilog version to 4.3.1

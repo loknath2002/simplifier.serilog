@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using Serilog.Events;
 namespace Simplifier.Serilog.Tests
 {
@@ -60,6 +61,32 @@ namespace Simplifier.Serilog.Tests
             myTargetFile = Directory.EnumerateFiles("./", "MultiProc_*.mlog").FirstOrDefault()!;
             LoggingSetup.ChangeLogLevel(LogEventLevel.Verbose);
         }
+
+        [Test]
+        public void Benchmark_FuzzySearch_WithLotsOfNamespaces()
+        {
+            int aLimit = 5000;
+            foreach (var aNamespace in Enumerable.Range(0, aLimit))
+            {
+                myLoggingInstance.AddSubLogger($"App.Namespace{aNamespace}", new SubLoggingConfiguration
+                {
+                    LogEventLevel = LogEventLevel.Verbose,
+                });
+            }
+            
+            Stopwatch aWatch = Stopwatch.StartNew();
+            foreach (var aId in Enumerable.Range(0, aLimit))
+            {
+                using (var aDataModuleScope = new LogScope(new LoggerDetail($"App.DataModule.Invoices.LongFunctionNameGoesHere.{aId}")))
+                {
+                    // Nothing doing. LogDetail will invoke the fuzzy search
+                }
+            }
+
+            aWatch.Stop();
+            Assert.LessOrEqual(aWatch.ElapsedMilliseconds, 2500);
+        }
+        
         [Test]
         public void Verify_SubLogger_NamespaceResolves_Fuzzyly()
         {

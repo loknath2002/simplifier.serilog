@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using Serilog;
 using Serilog.Context;
 using Serilog.Events;
@@ -37,6 +38,24 @@ public class LoggingTests
 
         myTargetFile = Directory.EnumerateFiles("./", "*.slog").FirstOrDefault()!;
         LoggingSetup.ChangeLogLevel(LogEventLevel.Verbose);
+    }
+
+    [Test]
+    public void Benchmark_DomainCreation()
+    {
+        Stopwatch aWatch = Stopwatch.StartNew();
+        int aLimit = 5000;
+        foreach (var aId in Enumerable.Range(0, aLimit))
+        {
+            using (var aDataModuleScope = new LogScope(new LoggerDetail($"App.DataModule.Invoices.LongFunctionNameGoesHere.{aId}")))
+            {
+                // Nothing doing. LogDetail will invoke the fuzzy search
+            }
+        }
+
+        aWatch.Stop();
+        Assert.LessOrEqual(aWatch.ElapsedMilliseconds, 15);
+        
     }
 
     [Test]

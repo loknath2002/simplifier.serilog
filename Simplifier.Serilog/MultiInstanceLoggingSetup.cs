@@ -16,10 +16,17 @@ namespace Simplifier.Serilog
         private const int myLoggerNameRequiredLength = 2;
 
         private const string myGlobalLoggerInstanceKey = "Global";
+        
+        private static readonly char[] myGlobalLoggerInstanceKeyCharArray = myGlobalLoggerInstanceKey.ToCharArray();
 
         private readonly ConcurrentDictionary<string, (ILogger, LoggingLevelSwitch)> myLoggers = new ConcurrentDictionary<string, (ILogger, LoggingLevelSwitch)>();
 
-        private LoggingConfiguration myGlobalConfiguration;
+        private readonly ConcurrentBag<char[]> myLoggerKeys = new ConcurrentBag<char[]>()
+        {
+            myGlobalLoggerInstanceKeyCharArray
+        };
+        
+        private readonly LoggingConfiguration myGlobalConfiguration;
         
         internal const string DefaultMultiInstanceLoggerName = "Default";
         
@@ -56,13 +63,14 @@ namespace Simplifier.Serilog
             LoggerDetail.SetLoggingStrategy(false);
             Instances[theInstanceName] = this;
         }
+        
         /// <summary>
         ///     Gets a logger by name, internally does a fuzzy search, i.e MyApplication.Module.Storage will return and exact match
         ///     or MyApplication.Module if exists.
         /// </summary>
         /// <param name="theFuzzyLoggerNameSpace">the name of the logger</param>
-        /// <returns>Closely matched logger else Global instance of the logger</returns>
-        internal ILogger SearchLogger(string theFuzzyLoggerNameSpace)
+        /// <returns>Closely matched logger, when not found Global sub-logger</returns>
+        public ILogger SearchLogger(string theFuzzyLoggerNameSpace)
         {
             Guard.AgainstNullOrWhiteSpace(theFuzzyLoggerNameSpace, nameof(theFuzzyLoggerNameSpace));
             if (myLoggers.TryGetValue(theFuzzyLoggerNameSpace, out var theLogger))
@@ -70,16 +78,22 @@ namespace Simplifier.Serilog
                 return theLogger.Item1;
             }
 
-            string[] aAllNamespaces = myLoggers.Keys.ToArray();
-            string aClosestMatch = myGlobalLoggerInstanceKey;
+            char[] aClosestMatch = myGlobalLoggerInstanceKeyCharArray;
             int aClosestMatchCount = myLoggerNameRequiredLength - 1;
-            foreach (string aNameSpace in aAllNamespaces)
+            int aInLength = theFuzzyLoggerNameSpace.Length;
+            char[] aChars = theFuzzyLoggerNameSpace.ToCharArray();
+            foreach (var aNameSpace in myLoggerKeys.ToArray())
             {
                 int aMatchCount = 0;
-                int minLength = Math.Min(aNameSpace.Length, theFuzzyLoggerNameSpace.Length);
-                for (int i = 0; i < minLength; i++)
+                int aMinimumLength = aNameSpace.Length > aInLength ? aInLength : aNameSpace.Length;
+                if (aMinimumLength <= aClosestMatchCount)
                 {
-                    if (aNameSpace[i] != theFuzzyLoggerNameSpace[i])
+                    continue;
+                }
+                
+                for (int i = 0; i < aMinimumLength; i++)
+                {
+                    if (aNameSpace[i] != aChars[i])
                     {
                         break;
                     }
@@ -92,13 +106,18 @@ namespace Simplifier.Serilog
                     aClosestMatch = aNameSpace;
                     aClosestMatchCount = aMatchCount;
                 }
+
+                if (aMatchCount == aInLength)
+                {
+                    break;
+                }
             }
 
-            return myLoggers[aClosestMatch].Item1;
+            return myLoggers[new string(aClosestMatch)].Item1;
         }
 
         /// <summary>
-        ///     Changes the logging level of the sublogger
+        ///     Changes the logging level of the sublogger, this does NOT do fuzzy search
         /// </summary>
         /// <param name="theLoggerName">the precise logger name</param>
         /// <param name="theNewLevel">the new level to set to the sublogger</param>
@@ -115,7 +134,7 @@ namespace Simplifier.Serilog
         }
 
         /// <summary>
-        ///     Adds a sub logger to the global logger.
+        ///     Adds a sub logger to the global logger, this sub-logger can have its own configuration.
         /// </summary>
         /// <param name="theLoggerNamespace">the logger name, this is</param>
         /// <param name="theSubConfiguration">the configuration for this sub-logger</param>
@@ -133,6 +152,11 @@ namespace Simplifier.Serilog
             }
             
             LoggingSetup.CreateLogger(CreateFullConfigFromPartial(theSubConfiguration), out var theLevelSwitch, out var theLogger);
+            if (!myLoggers.ContainsKey(theLoggerNamespace))
+            {
+                myLoggerKeys.Add(theLoggerNamespace.ToCharArray());
+            }
+            
             myLoggers[theLoggerNamespace] = (theLogger, theLevelSwitch);
         }
         

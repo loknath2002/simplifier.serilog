@@ -2,8 +2,8 @@
 using System.Runtime.CompilerServices;
 using Serilog;
 using Serilog.Context;
-using Serilog.Core;
 using Serilog.Events;
+#pragma warning disable CA2254
 
 namespace Simplifier.Serilog
 {
@@ -797,7 +797,7 @@ namespace Simplifier.Serilog
                 myLogger.Fatal(theMessageTemplate, theFormatArgs);
             }
         }
-
+        
         /// <summary>
         /// Logs out trace when enabled. Otherwise, does nothing
         /// </summary>
@@ -845,3 +845,5 @@ namespace Simplifier.Serilog
         }
     }
 }
+
+#pragma warning restore CA2254

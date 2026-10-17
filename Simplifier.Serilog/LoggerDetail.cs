@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using Serilog;
-using Serilog.Core;
 namespace Simplifier.Serilog
 {
     /// <summary>
@@ -24,20 +23,6 @@ namespace Simplifier.Serilog
         ///     Creates an instance of Logger Detail
         /// </summary>
         /// <param name="theLogScope">Type that encloses the logger's scope</param>
-        public LoggerDetail(Type theLogScope) : this(theLogScope, MultiInstanceLoggingSetup.DefaultMultiInstanceLoggerName)
-        { }
-        
-        /// <summary>
-        ///     Creates an instance of Logger Detail
-        /// </summary>
-        /// <param name="theLogScopeName">Type that encloses the logger's scope</param>
-        public LoggerDetail(string theLogScopeName) : this(theLogScopeName, MultiInstanceLoggingSetup.DefaultMultiInstanceLoggerName)
-        { }
-        
-        /// <summary>
-        ///     Creates an instance of Logger Detail
-        /// </summary>
-        /// <param name="theLogScope">Type that encloses the logger's scope</param>
         /// <param name="theLoggingInstance">The logging instance name to use in case of <see cref="MultiInstanceLoggingSetup"/></param>
         public LoggerDetail(Type theLogScope, string theLoggingInstance = MultiInstanceLoggingSetup.DefaultMultiInstanceLoggerName)
         {
@@ -53,6 +38,7 @@ namespace Simplifier.Serilog
         /// <param name="theLoggingInstance">The logging instance name to use in case of <see cref="MultiInstanceLoggingSetup"/></param>
         public LoggerDetail(string theLogScopeName, string theLoggingInstance = MultiInstanceLoggingSetup.DefaultMultiInstanceLoggerName)
         {
+            Guard.AgainstNullOrWhiteSpace(theLogScopeName, nameof(theLogScopeName));
             ScopeName = theLogScopeName;
             AssignLogger(theLogScopeName, theLoggingInstance);
         }
@@ -83,12 +69,12 @@ namespace Simplifier.Serilog
         /// <summary>
         ///     Gets the logger instance for this log detail.
         /// </summary>
-        internal ILogger Logger { get; private set; }
+        public ILogger Logger { get; private set; }
 
         /// <summary>
         /// Gets logger's scope name
         /// </summary>
-        public string ScopeName { get; private set; }
+        public string ScopeName { get; }
 
         internal static void SetLoggingStrategy(bool theIsSingleInstance)
         {
@@ -96,7 +82,7 @@ namespace Simplifier.Serilog
             {
                 if (mySingleLogger.HasValue && theIsSingleInstance != mySingleLogger.Value)
                 {
-                    throw new InvalidOperationException("Logging strategy can only be set once.");
+                    throw new InvalidOperationException("Logging strategy can only be changed once.");
                 }
 
                 mySingleLogger = theIsSingleInstance;
