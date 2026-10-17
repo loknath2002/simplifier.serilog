@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using Serilog;
+using Serilog.Core;
 namespace Simplifier.Serilog
 {
     /// <summary>
@@ -9,41 +10,73 @@ namespace Simplifier.Serilog
     public class LoggerDetail
     {
         /// <summary>
+        /// Lock for writing logger state
+        /// </summary>
+        // ReSharper disable once ChangeFieldTypeToSystemThreadingLock
+        private static readonly object myWriterLock = new object();
+        
+        /// <summary>
         /// Flag to hold the logging strategy.
         /// </summary>
         private static bool? mySingleLogger;
+
+        /// <summary>
+        ///     Creates an instance of Logger Detail
+        /// </summary>
+        /// <param name="theLogScope">Type that encloses the logger's scope</param>
+        public LoggerDetail(Type theLogScope) : this(theLogScope, MultiInstanceLoggingSetup.DefaultMultiInstanceLoggerName)
+        { }
+        
+        /// <summary>
+        ///     Creates an instance of Logger Detail
+        /// </summary>
+        /// <param name="theLogScopeName">Type that encloses the logger's scope</param>
+        public LoggerDetail(string theLogScopeName) : this(theLogScopeName, MultiInstanceLoggingSetup.DefaultMultiInstanceLoggerName)
+        { }
         
         /// <summary>
         ///     Creates an instance of Logger Detail
         /// </summary>
         /// <param name="theLogScope">Type that encloses the logger's scope</param>
-        public LoggerDetail(Type theLogScope)
+        /// <param name="theLoggingInstance">The logging instance name to use in case of <see cref="MultiInstanceLoggingSetup"/></param>
+        public LoggerDetail(Type theLogScope, string theLoggingInstance = MultiInstanceLoggingSetup.DefaultMultiInstanceLoggerName)
         {
             Guard.AgainstNull(theLogScope, nameof(theLogScope));
             ScopeName = theLogScope.FullName;
-            AssignLogger(ScopeName);
+            AssignLogger(ScopeName, theLoggingInstance);
         }
 
         /// <summary>
         ///     Creates an instance of Logger Detail
         /// </summary>
         /// <param name="theLogScopeName">Name/ID which encloses the logger's scope</param>
-        public LoggerDetail(string theLogScopeName)
+        /// <param name="theLoggingInstance">The logging instance name to use in case of <see cref="MultiInstanceLoggingSetup"/></param>
+        public LoggerDetail(string theLogScopeName, string theLoggingInstance = MultiInstanceLoggingSetup.DefaultMultiInstanceLoggerName)
         {
             ScopeName = theLogScopeName;
-            AssignLogger(theLogScopeName);
+            AssignLogger(theLogScopeName, theLoggingInstance);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void AssignLogger(string theLogScopeName)
+        private void AssignLogger(string theLogScopeName, string theInstanceName)
         {
             if (mySingleLogger == null || mySingleLogger.Value)
             {
+                if (LoggingSetup.Logger == global::Serilog.Core.Logger.None)
+                {
+                    LoggingSetup.Create(LoggingConfiguration.ProdConfig);
+                }
+
                 Logger = LoggingSetup.Logger;
             }
             else
             {
-                Logger = MultiInstanceLoggingSetup.Instance.SearchLogger(theLogScopeName);
+                if (!MultiInstanceLoggingSetup.Instances.TryGetValue(theInstanceName, out var aInstance))
+                {
+                    throw new ArgumentException($"Logger instance {theInstanceName} not found. Please create one using MultiInstanceLoggingSetup or use the 'Default' instance");
+                }
+                
+                Logger = aInstance.SearchLogger(theLogScopeName);
             }
         }
 
@@ -59,12 +92,15 @@ namespace Simplifier.Serilog
 
         internal static void SetLoggingStrategy(bool theIsSingleInstance)
         {
-            if (mySingleLogger.HasValue && theIsSingleInstance != mySingleLogger.Value)
+            lock (myWriterLock)
             {
-                throw new InvalidOperationException("Logging strategy can only be set once.");
+                if (mySingleLogger.HasValue && theIsSingleInstance != mySingleLogger.Value)
+                {
+                    throw new InvalidOperationException("Logging strategy can only be set once.");
+                }
+
+                mySingleLogger = theIsSingleInstance;
             }
-            
-            mySingleLogger = theIsSingleInstance;
         }
     }
 }

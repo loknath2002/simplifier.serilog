@@ -57,7 +57,7 @@ namespace Simplifier.Serilog
             Guard.AgainstNull(theConfiguration, nameof(theConfiguration));
             Guard.AgainstNullOrWhiteSpace(theConfiguration.LogFormat, nameof(theConfiguration.LogFormat));
             Guard.AgainstNullOrWhiteSpace(theConfiguration.FileName, nameof(theConfiguration.FileName));
-            var aTemp = new LoggerConfiguration()
+            var aSerilogConfiguration = new LoggerConfiguration()
                 .Enrich.WithThreadId()
                 .Enrich.WithProcessId()
                 .Enrich.FromLogContext()
@@ -67,14 +67,14 @@ namespace Simplifier.Serilog
                     shared: theConfiguration.MultiProcess);
 
             theLevelSwitch = new LoggingLevelSwitch(theConfiguration.LogEventLevel);
-            aTemp.MinimumLevel.ControlledBy(myLogLevelSwitch);
+            aSerilogConfiguration.MinimumLevel.ControlledBy(theLevelSwitch);
             if (theConfiguration.EnableConsole)
             {
-                aTemp.WriteTo.Console(outputTemplate: theConfiguration.LogFormat,
+                aSerilogConfiguration.WriteTo.Console(outputTemplate: theConfiguration.LogFormat,
                     formatProvider: theConfiguration.Localization);
             }
 
-            theLogger = aTemp.CreateLogger();
+            theLogger = aSerilogConfiguration.CreateLogger();
         }
 
         /// <summary>

@@ -26,11 +26,6 @@ namespace Simplifier.Serilog
         {
             Guard.AgainstNull(theDetail, nameof(theDetail));
             Guard.AgainstNull(theCallerName, nameof(theCallerName));
-            if (LoggingSetup.Logger == Logger.None)
-            {
-                LoggingSetup.Create(LoggingConfiguration.ProdConfig);
-            }
-
             myDetail = theDetail;
             myLogger = theDetail.Logger;
             myStartTime = DateTime.UtcNow;
