@@ -31,8 +31,8 @@ namespace Simplifier.Serilog
                 LoggingSetup.Create(LoggingConfiguration.ProdConfig);
             }
 
-            myLogger = LoggingSetup.Logger;
             myDetail = theDetail;
+            myLogger = theDetail.Logger;
             myStartTime = DateTime.UtcNow;
 #pragma warning disable CA1865
             myCallerName = theCallerName.StartsWith(".", StringComparison.InvariantCulture) ? theCallerName.Remove(0, 1) : theCallerName;

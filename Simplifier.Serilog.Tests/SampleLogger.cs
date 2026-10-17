@@ -1,4 +1,5 @@
-﻿namespace Simplifier.Serilog.Sample
+﻿using Simplifier.Serilog.Tests;
+namespace Simplifier.Serilog.Sample
 {
     public class DemoClass
     {

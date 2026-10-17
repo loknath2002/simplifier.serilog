@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Xml.XPath;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
@@ -34,16 +33,28 @@ namespace Simplifier.Serilog
         }
 
         /// <summary>
-        /// Creates a global logger using Serilog with provided configuration.
+        /// Creates a global logger using Serilog with the provided configuration.
         /// </summary>
-        /// <param name="theConfiguration">The configuration to use to setup Serilog</param>
+        /// <param name="theConfiguration">The configuration to use to set up Serilog</param>
+        /// <exception cref="ArgumentException">when the configuration is null</exception>
         public static void Create(LoggingConfiguration theConfiguration)
         {
-            if (theConfiguration == null)
-            {
-                throw new ArgumentException($"{nameof(theConfiguration)} must be non-null", nameof(theConfiguration));
-            }
-            
+            Guard.AgainstNull(theConfiguration, nameof(theConfiguration));
+            CreateLogger(theConfiguration, out myLogLevelSwitch, out var aLogger);
+            Log.Logger = aLogger;
+            LoggerDetail.SetLoggingStrategy(true);
+        }
+
+        /// <summary>
+        /// Helper function to create a logger.
+        /// </summary>
+        /// <param name="theConfiguration">the configuration detail</param>
+        /// <param name="theLevelSwitch">the out logging switch controller</param>
+        /// <param name="theLogger">the instance of the logger</param>
+        /// <exception cref="ArgumentException">when the configuration is null</exception>
+        internal static void CreateLogger(LoggingConfiguration theConfiguration, out LoggingLevelSwitch theLevelSwitch, out ILogger theLogger)
+        {
+            Guard.AgainstNull(theConfiguration, nameof(theConfiguration));
             Guard.AgainstNullOrWhiteSpace(theConfiguration.LogFormat, nameof(theConfiguration.LogFormat));
             Guard.AgainstNullOrWhiteSpace(theConfiguration.FileName, nameof(theConfiguration.FileName));
             var aTemp = new LoggerConfiguration()
@@ -55,7 +66,7 @@ namespace Simplifier.Serilog
                     formatProvider: theConfiguration.Localization,
                     shared: theConfiguration.MultiProcess);
 
-            myLogLevelSwitch = new LoggingLevelSwitch(theConfiguration.LogEventLevel);
+            theLevelSwitch = new LoggingLevelSwitch(theConfiguration.LogEventLevel);
             aTemp.MinimumLevel.ControlledBy(myLogLevelSwitch);
             if (theConfiguration.EnableConsole)
             {
@@ -63,7 +74,7 @@ namespace Simplifier.Serilog
                     formatProvider: theConfiguration.Localization);
             }
 
-            Log.Logger = aTemp.CreateLogger();
+            theLogger = aTemp.CreateLogger();
         }
 
         /// <summary>

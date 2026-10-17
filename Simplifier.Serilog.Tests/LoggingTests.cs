@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using System.Reflection;
+using Serilog;
 using Serilog.Context;
 using Serilog.Events;
 using Simplifier.Serilog.Sample;
@@ -34,7 +35,7 @@ public class LoggingTests
             aScope.Info("Warmup");
         }
 
-        myTargetFile = Directory.EnumerateFiles("./", "*.slog").FirstOrDefault();
+        myTargetFile = Directory.EnumerateFiles("./", "*.slog").FirstOrDefault()!;
         LoggingSetup.ChangeLogLevel(LogEventLevel.Verbose);
     }
 
@@ -257,12 +258,12 @@ public class LoggingTests
         AssertLineAbsent(aLines, "[O] Exiting Verify_In_Out_Traces_Are_Not_Logged");
     }
     
-    private void AssertLineAbsent(string[] theLines, string theMatchMarker)
+    internal static void AssertLineAbsent(string[] theLines, string theMatchMarker)
     {
         Assert.That(theLines.Any(x => x.Contains(theMatchMarker)), Is.False);
     }
 
-    private void AssertLinePresent(string[] theLines, string theMatchMarker, string theLevel, string theFunctionName)
+    internal static void AssertLinePresent(string[] theLines, string theMatchMarker, string theLevel, string theFunctionName)
     {
         string[] aParts = theLines.FirstOrDefault(x => x.Contains(theMatchMarker))!.Split(" ", StringSplitOptions.RemoveEmptyEntries|StringSplitOptions.TrimEntries);
         Assert.That(aParts.Length, Is.AtLeast(7));
